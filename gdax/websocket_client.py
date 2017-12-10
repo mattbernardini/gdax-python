@@ -96,6 +96,7 @@ class WebsocketClient(object):
             if self.ws:
                 self.ws.close()
         except WebSocketConnectionClosedException as e:
+            print (e)
             pass
 
         self.on_close()
