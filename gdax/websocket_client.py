@@ -132,7 +132,7 @@ class WebsocketClient(object):
                 if self.stop:
                     print("\nThread did not start properly")
                     raise ChildProcessError('The thread did not start properly')
-        except ChildProcessError as e:
+        except ChildProcessError as error:
             if not self.tried_to_restart:
                 self.tried_to_restart = True
                 self.start()
