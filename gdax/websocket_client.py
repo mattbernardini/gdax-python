@@ -36,6 +36,7 @@ class WebsocketClient(object):
         self.mongo_collection = mongo_collection
 
     def start(self):
+        print ('using this one')
         def _go():
             self._connect()
             self._listen()
