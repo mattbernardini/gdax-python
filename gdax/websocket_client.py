@@ -37,7 +37,6 @@ class WebsocketClient(object):
         self.tried_to_restart = False
 
     def start(self):
-        print ('using this one')
         def _go():
             self._connect()
             self._listen()
