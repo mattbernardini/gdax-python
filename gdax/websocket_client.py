@@ -96,7 +96,6 @@ class WebsocketClient(object):
             if self.ws:
                 self.ws.close()
         except WebSocketConnectionClosedException as e:
-            print (e)
             pass
 
         self.on_close()
@@ -120,9 +119,17 @@ class WebsocketClient(object):
             self.mongo_collection.insert_one(msg)
 
     def on_error(self, e, data=None):
-        self.error = e
-        self.stop = True
-        print('{} - data: {}'.format(e, data))
+        print ("\nError occured\nError is: ")
+        print('{}'.format(e))
+        try:
+            print("\nAttempting to restart thread\n")
+            self.start()
+        except * as error:
+            self.on_error(error)
+        finally:
+            self.error = e
+            self.stop = True
+            print('{} - data: {}'.format(e, data))
 
 
 if __name__ == "__main__":
