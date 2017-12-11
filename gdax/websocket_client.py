@@ -34,6 +34,7 @@ class WebsocketClient(object):
         self.api_passphrase = api_passphrase
         self.should_print = should_print
         self.mongo_collection = mongo_collection
+        self.tried_to_restart = False
 
     def start(self):
         print ('using this one')
@@ -123,10 +124,22 @@ class WebsocketClient(object):
         print ("\nError occured\nError is: ")
         print('{}'.format(e))
         try:
-            print("\nAttempting to restart thread\n")
-            self.start()
-        except * as error:
-            self.on_error(error)
+            print("\nChecking if thread is alive")
+            if not self.thread.isAlive():
+                self.stop = True # change this to check after to make sure thread restarted properly
+                print("\nThread is dead, attempting to restart")
+                self.start()
+                if self.stop:
+                    print("\nThread did not start properly")
+                    raise ChildProcessError('The thread did not start properly')
+        except ChildProcessError as e:
+            if not self.tried_to_restart:
+                self.tried_to_restart = True
+                self.start()
+            else:
+                print("\nHave attempted to restart thread and failed, now exiting")
+        except:
+            print('\nSomething went wrong')
         finally:
             self.error = e
             self.stop = True
