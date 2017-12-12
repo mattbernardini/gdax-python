@@ -78,8 +78,8 @@ class WebsocketClient(object):
     def _listen(self):
         while not self.stop:
             try:
-                if int(time.time() % 30) == 0:
-                    # Set a 30 second ping to keep connection alive
+                if int(time.time() % 20) == 0:
+                    # Set a 20 second ping to keep connection alive
                     self.ws.ping("keepalive")
                 data = self.ws.recv()
                 msg = json.loads(data)
@@ -120,29 +120,10 @@ class WebsocketClient(object):
             self.mongo_collection.insert_one(msg)
 
     def on_error(self, e, data=None):
-        print ("\nError occured\nError is: ")
-        print('{}'.format(e))
-        try:
-            print("\nChecking if thread is alive")
-            if not self.thread.isAlive():
-                self.stop = True # change this to check after to make sure thread restarted properly
-                print("\nThread is dead, attempting to restart")
-                self.start()
-                if self.stop:
-                    print("\nThread did not start properly")
-                    raise ChildProcessError('The thread did not start properly')
-        except ChildProcessError as error:
-            if not self.tried_to_restart:
-                self.tried_to_restart = True
-                self.start()
-            else:
-                print("\nHave attempted to restart thread and failed, now exiting")
-        except:
-            print('\nSomething went wrong')
-        finally:
-            self.error = e
-            self.stop = True
-            print('{} - data: {}'.format(e, data))
+        self.error = e
+        self.stop = True
+        print('{} - data: {}'.format(e, data))
+        raise WebSocketConnectionClosedException
 
 
 if __name__ == "__main__":
