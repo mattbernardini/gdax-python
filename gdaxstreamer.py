@@ -8,7 +8,7 @@ from websocket import WebSocketConnectionClosedException
 db = mongo_client.cryptocurrency_database
 collection = db.unifiedCollection
 # instantiate a WebsocketClient instance, with a Mongo collection as a parameter
-unifiedWsClient = gdax.WebsocketClient(url="wss://ws-feed.gdax.com", products=["BTC-USD","ETH-USD","LTC-USD",]
+unifiedWsClient = gdax.WebsocketClient(url="wss://ws-feed.gdax.com", products=["BTC-USD","ETH-USD","LTC-USD"],
   mongo_collection=collection, should_print=False)
 unifiedWsClient.start()
         
